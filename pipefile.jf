@@ -7,14 +7,18 @@ pipeline {
                 echo 'Building..'
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
+		
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
+            }
+        }
+		
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+                bat 'cd C:\\Users\\pythonProject && pytest .\\newpytest.py --self-contained-html'
+                archiveArtifacts artifacts: 'C:\\Users\\pythonProject\\pytest_html_report.html', allowEmptyArchive: true
             }
         }
     }
