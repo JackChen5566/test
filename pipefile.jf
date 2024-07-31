@@ -18,17 +18,21 @@ pipeline {
             steps {
                 echo 'Testing..'
                 script {
-                    try {
-                        bat '''
+                    script {
+						def result = bat(script: '''
 				           cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
 				           C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
 						   echo %ERRORLEVEL%
 				           copy pytest_html_report.html %WORKSPACE%
-
-				        '''
-                    } catch (Exception e) {
+					''', returnStdout: true).trim()
+                    def lines = result.split('\r?\n')
+                    def pytestStatus = lines[-1].trim()
+                    
+                    echo "Pytest exited with status: ${pytestStatus}"
+                    
+                    if (pytestStatus != '0') {
                         currentBuild.result = 'FAILURE'
-                        error "Pytest tests failed"
+                        error "Pytest tests failed with status: ${pytestStatus}"
                     }
                 }
                 archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
