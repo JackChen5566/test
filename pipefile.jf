@@ -18,8 +18,7 @@ pipeline {
             steps {
                 echo 'Testing..'
                 script {
-                    script {
-						def result = bat(script: '''
+					def result = bat(script: '''
 				           cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
 				           C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
 						   echo %ERRORLEVEL%
