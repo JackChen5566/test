@@ -17,11 +17,12 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-                bat '''
-				cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
-				C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
-				copy pytest_html_report.html %WORKSPACE%
-				'''
+                script {
+                    def pytestStatus = bat(script: '''
+				        cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
+				        C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
+				        copy pytest_html_report.html %WORKSPACE%
+				    ''', returnStatus: true)
                 archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
             }
         }
