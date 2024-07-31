@@ -23,6 +23,10 @@ pipeline {
 				        C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
 				        copy pytest_html_report.html %WORKSPACE%
 				    ''', returnStatus: true)
+					if (pytestStatus != 0) {
+                        error "Pytest tests failed with status: ${pytestStatus}"
+                    }
+                }
                 archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
             }
         }
