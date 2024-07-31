@@ -18,32 +18,33 @@ pipeline {
             steps {
                 echo 'Testing..'
                 script {
+                    // Run pytest and capture the output and error level
                     def result = bat(script: '''
                         cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
                         C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
                         echo %ERRORLEVEL%
-                        copy pytest_html_report.html %WORKSPACE%\\pytest_html_report.html
                     ''', returnStdout: true).trim()
 
                     // Output pytest result for debugging
                     echo "Pytest output:\n${result}"
 
-                    // Extract ERRORLEVEL
+                    // Extract ERRORLEVEL from the output
                     def lines = result.split('\r?\n')
                     def pytestStatus = lines[-1].trim()
 
                     echo "Pytest exited with status: ${pytestStatus}"
 
+                    // Check the status and set the build result accordingly
                     if (pytestStatus != '0') {
                         currentBuild.result = 'FAILURE'
                         error "Pytest tests failed with status: ${pytestStatus}"
                     }
 
-                    // Define file path after ensuring all steps are complete
-                    def reportFilePath = "${env.WORKSPACE}\\pytest_html_report.html"
-                    echo "Archiving file at: ${reportFilePath}"
+                    // Copy the report to the Jenkins workspace
+                    bat(script: 'copy pytest_html_report.html %WORKSPACE%\\pytest_html_report.html')
 
-                    // Archive the artifact
+                    // Archive the report
+                    echo "Archiving file at: ${env.WORKSPACE}\\pytest_html_report.html"
                     archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
                 }
             }
