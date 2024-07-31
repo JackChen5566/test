@@ -18,7 +18,6 @@ pipeline {
             steps {
                 echo 'Testing..'
                 script {
-                    // 执行 pytest 并捕获其输出
                     def result = bat(script: '''
                         cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
                         C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
@@ -40,7 +39,10 @@ pipeline {
                         error "Pytest tests failed with status: ${pytestStatus}"
                     }
                 }
+
                 // 归档 pytest 生成的 HTML 报告
+                // 确保使用工作区路径
+                echo "Archiving artifacts from ${env.WORKSPACE}\\pytest_html_report.html"
                 archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
             }
         }
