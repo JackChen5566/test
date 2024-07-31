@@ -17,8 +17,8 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-                bat 'cd C:\\Users\\pythonProject && pytest .\\newpytest.py --self-contained-html'
-                archiveArtifacts artifacts: 'C:\\Users\\pythonProject\\pytest_html_report.html', allowEmptyArchive: true
+                bat 'C:\\Users\\Jacky\\PycharmProjects\\pythonProject && pytest .\\newpytest.py --self-contained-html'
+                archiveArtifacts artifacts: 'C:\\Users\\Jacky\\PycharmProjects\\pythonProject\\pytest_html_report.html', allowEmptyArchive: true
             }
         }
     }
