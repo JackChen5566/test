@@ -19,7 +19,7 @@ pipeline {
                 echo 'Testing..'
                 bat '''
 				cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
-				C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html'
+				C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html
 				copy pytest_html_report.html %WORKSPACE%
 				'''
                 archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
