@@ -7,17 +7,18 @@ pipeline {
                 echo 'Building..'
             }
         }
-		
+
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
             }
         }
-		
+
         stage('Test') {
             steps {
                 echo 'Testing..'
                 script {
+                    // 执行 pytest 并捕获其输出
                     def result = bat(script: '''
                         cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
                         C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
@@ -25,21 +26,21 @@ pipeline {
                         copy pytest_html_report.html %WORKSPACE%\\pytest_html_report.html
                     ''', returnStdout: true).trim()
 
-                    // Output the result for debugging
+                    // 输出 pytest 执行的详细信息
                     echo "Pytest output:\n${result}"
 
-                    // Extract and process the ERRORLEVEL
+                    // 提取 ERRORLEVEL 并检查是否为非零
                     def lines = result.split('\r?\n')
                     def pytestStatus = lines[-1].trim()
-                    
+
                     echo "Pytest exited with status: ${pytestStatus}"
-                    
+
                     if (pytestStatus != '0') {
                         currentBuild.result = 'FAILURE'
                         error "Pytest tests failed with status: ${pytestStatus}"
                     }
                 }
-                // Archive the HTML report
+                // 归档 pytest 生成的 HTML 报告
                 archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
             }
         }
