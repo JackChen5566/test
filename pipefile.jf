@@ -22,9 +22,13 @@ pipeline {
                         cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
                         C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
                         echo %ERRORLEVEL%
-                        copy pytest_html_report.html %WORKSPACE%
+                        copy pytest_html_report.html %WORKSPACE%\\pytest_html_report.html
                     ''', returnStdout: true).trim()
 
+                    // Output the result for debugging
+                    echo "Pytest output:\n${result}"
+
+                    // Extract and process the ERRORLEVEL
                     def lines = result.split('\r?\n')
                     def pytestStatus = lines[-1].trim()
                     
@@ -35,6 +39,7 @@ pipeline {
                         error "Pytest tests failed with status: ${pytestStatus}"
                     }
                 }
+                // Archive the HTML report
                 archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
             }
         }
