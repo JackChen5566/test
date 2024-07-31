@@ -45,7 +45,7 @@ pipeline {
                     // Now check the status and set the build result accordingly
                     if (pytestStatus != '0') {
                         currentBuild.result = 'FAILURE'
-                        error "Pytest tests failed with status: ${pytestStatus}"
+                        error "Pytest tests failed with status: ${pytestStatus}" 
                     }
                 }
             }
