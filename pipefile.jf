@@ -18,12 +18,13 @@ pipeline {
             steps {
                 echo 'Testing..'
                 script {
-					def result = bat(script: '''
-				           cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
-				           C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
-						   echo %ERRORLEVEL%
-				           copy pytest_html_report.html %WORKSPACE%
-					''', returnStdout: true).trim()
+                    def result = bat(script: '''
+                        cd C:\\Users\\Jacky\\PycharmProjects\\pythonProject
+                        C:\\Python311\\Scripts\\pytest.exe .\\newpytest.py --self-contained-html --html=pytest_html_report.html
+                        echo %ERRORLEVEL%
+                        copy pytest_html_report.html %WORKSPACE%
+                    ''', returnStdout: true).trim()
+
                     def lines = result.split('\r?\n')
                     def pytestStatus = lines[-1].trim()
                     
