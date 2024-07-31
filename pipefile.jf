@@ -38,13 +38,14 @@ pipeline {
                         currentBuild.result = 'FAILURE'
                         error "Pytest tests failed with status: ${pytestStatus}"
                     }
-                }
 
-                // Verify file path and archive it
-                echo "Workspace directory: ${env.WORKSPACE}"
-                def reportFilePath = "${env.WORKSPACE}\\pytest_html_report.html"
-                echo "Archiving file at: ${reportFilePath}"
-                archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
+                    // Define file path after ensuring all steps are complete
+                    def reportFilePath = "${env.WORKSPACE}\\pytest_html_report.html"
+                    echo "Archiving file at: ${reportFilePath}"
+
+                    // Archive the artifact
+                    archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
+                }
             }
         }
     }
