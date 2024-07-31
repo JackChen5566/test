@@ -25,10 +25,10 @@ pipeline {
                         copy pytest_html_report.html %WORKSPACE%\\pytest_html_report.html
                     ''', returnStdout: true).trim()
 
-                    // 输出 pytest 执行的详细信息
+                    // Output pytest result for debugging
                     echo "Pytest output:\n${result}"
 
-                    // 提取 ERRORLEVEL 并检查是否为非零
+                    // Extract ERRORLEVEL
                     def lines = result.split('\r?\n')
                     def pytestStatus = lines[-1].trim()
 
@@ -40,9 +40,10 @@ pipeline {
                     }
                 }
 
-                // 归档 pytest 生成的 HTML 报告
-                // 确保使用工作区路径
-                echo "Archiving artifacts from ${env.WORKSPACE}\\pytest_html_report.html"
+                // Verify file path and archive it
+                echo "Workspace directory: ${env.WORKSPACE}"
+                def reportFilePath = "${env.WORKSPACE}\\pytest_html_report.html"
+                echo "Archiving file at: ${reportFilePath}"
                 archiveArtifacts artifacts: 'pytest_html_report.html', allowEmptyArchive: true
             }
         }
